@@ -1,7 +1,20 @@
 import sys
-from itertools import permutations
 
 n, m = map(int, sys.stdin.readline().split())
-p = permutations(range(1, n + 1), m)
-for i in p:
-    print(' '.join(map(str, i)))
+
+visited = [False] * n
+answer = []
+
+def dfs(depth):
+    if depth == m:
+        print(" ".join(map(str, answer)))
+        return
+    for i in range(n):
+        if not visited[i]:
+            visited[i] = True
+            answer.append(i + 1)
+            dfs(depth + 1)
+            visited[i] = False
+            answer.pop()
+
+dfs(0)
