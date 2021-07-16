@@ -1,40 +1,47 @@
 import sys
-input = sys.stdin.readline
-dx = [1, -1, 0, 0]
-dy = [0, 0, -1, 1]
-mfinger = [[[0, 1], [0, 2], [-1, 1]], [[0, 1], [0, 2], [1, 1]],
-[[1, 0], [2, 0], [1, 1]], [[1, 0], [1, -1], [2, 0]]]
-n, m = map(int, input().split())
-s = []
-visit = [[0] * m for i in range(n)]
-result = 0
-def dfs(x, y, cnt, num):
-    global result
-    if cnt == 4:
-        result = max(result, num)
-        return
-    for i in range(4):
-        nx = x + dx[i]
-        ny = y + dy[i]
-        if 0 <= nx < n and 0 <= ny < m and visit[nx][ny] == 0:
-            visit[nx][ny] = 1
-            dfs(nx, ny, cnt + 1, num + s[nx][ny])
-            visit[nx][ny] = 0
-def middlefinger(x, y):
-    global result
-    for i in mfinger:
-        try:
-            num = s[x][y] + s[x + i[0][0]][y + i[0][1]] + s[x + i[1][0]][y + i[1][1]] + s[x + i[2][0]][y + i[2][1]]
-        except:
-            num = 0
-        result = max(result, num)
-for i in range(n):
-    s.append(list(map(int, input().split())))
-result = 0
-for i in range(n):
-    for j in range(m):
-        visit[i][j] = 1
-        dfs(i, j, 1, s[i][j])
-        visit[i][j] = 0
-        middlefinger(i, j)
-print(result)
+
+n, m = map(int, sys.stdin.readline().split())
+arr = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
+tetromino = [
+    [(0,0), (0,1), (1,0), (1,1)], # ㅁ
+    [(0,0), (0,1), (0,2), (0,3)], # ㅡ
+    [(0,0), (1,0), (2,0), (3,0)], # ㅣ
+    [(0,0), (0,1), (0,2), (1,0)],
+    [(1,0), (1,1), (1,2), (0,2)],
+    [(0,0), (1,0), (1,1), (1,2)], # ㄴ
+    [(0,0), (0,1), (0,2), (1,2)], # ㄱ
+    [(0,0), (1,0), (2,0), (2,1)],
+    [(2,0), (2,1), (1,1), (0,1)],
+    [(0,0), (0,1), (1,0), (2,0)],
+    [(0,0), (0,1), (1,1), (2,1)],
+    [(0,0), (0,1), (0,2), (1,1)], # ㅜ
+    [(1,0), (1,1), (1,2), (0,1)], # ㅗ
+    [(0,0), (1,0), (2,0), (1,1)], # ㅏ
+    [(1,0), (0,1), (1,1), (2,1)], # ㅓ
+    [(1,0), (2,0), (0,1), (1,1)],
+    [(0,0), (1,0), (1,1), (2,1)],
+    [(1,0), (0,1), (1,1), (0,2)],
+    [(0,0), (0,1), (1,1), (1,2)]
+]
+
+def find(x, y):
+    global answer
+    for i in range(19):
+        result = 0
+        for j in range(4):
+            try:
+                next_x = x+tetromino[i][j][0] # x 좌표
+                next_y = y+tetromino[i][j][1] # y 좌표
+                result += arr[next_x][next_y]
+            except IndexError:
+                continue
+        answer = max(answer, result)
+
+def solve():
+    for i in range(n):
+        for j in range(m):
+            find(i, j)
+
+answer = 0
+solve()
+print(answer)
