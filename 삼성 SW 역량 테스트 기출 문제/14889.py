@@ -1,32 +1,26 @@
-from itertools import combinations  # 조합 함수
+from itertools import combinations
+import sys
 
-N = int(input())
-S = [list(map(int, input().split())) for _ in range(N)]
-members = [i for i in range(N)]
-possible_team = []
+n = int(sys.stdin.readline())
+s = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
+m = [i for i in range(n)]
+ans = sys.maxsize
 
-# 조합으로 가능한 팀 생성해주기
-for team in list(combinations(members, N // 2)):
-    possible_team.append(team)
+for cb in combinations(m, n//2):
+    start_sum = 0
+    link_sum = 0
 
-min_stat_gap = 10000  # 갭이 가장 작은 값을 찾기 위하여
-for i in range(len(possible_team) // 2):
-    # A 팀
-    team = possible_team[i]
-    stat_A = 0  # A팀 능력치
-    for j in range(N // 2):
-        member = team[j]  # 멤버
-        for k in team:
-            stat_A += S[member][k]  # 멤버와 함께할 경우의 능력치들
+    start_member = list(cb)
+    link_member = list(set(m) - set(cb))
 
-    # A를 제외한 나머지 팀
-    team = possible_team[-i - 1]
-    stat_B = 0
-    for j in range(N // 2):
-        member = team[j]
-        for k in team:
-            stat_B += S[member][k]
+    start_comb = combinations(start_member, 2)
+    link_comb = combinations(link_member, 2)
 
-    min_stat_gap = min(min_stat_gap, abs(stat_A - stat_B))
+    for x, y in start_comb:
+        start_sum += (s[x][y] + s[y][x])
+    for x, y in link_comb:
+        link_sum += (s[x][y] + s[y][x])
 
-print(min_stat_gap)
+    ans = min(ans, abs(start_sum - link_sum))
+
+print(ans)
