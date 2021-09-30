@@ -1,4 +1,4 @@
-mport sys
+import sys
 
 n, m = map(int, input().split())
 arr = [[] for i in range(n)]
@@ -28,4 +28,3 @@ for i in range(n):
     visited[i] = False
 
 print(0)
-5️⃣ 마치며..
