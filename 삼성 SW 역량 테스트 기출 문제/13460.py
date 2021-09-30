@@ -62,5 +62,3 @@ def bfs():
 
 
 bfs()
-
-출처: https: // jeongchul.tistory.com / 666[Jeongchul]
