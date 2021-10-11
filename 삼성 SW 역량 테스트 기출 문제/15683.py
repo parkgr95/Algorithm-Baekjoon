@@ -1,85 +1,72 @@
 from collections import deque
-from copy import deepcopy
 import sys
 
-input = sys.stdin.readline
-dx = [1, 0, -1, 0]
-dy = [0, -1, 0, 1]
+dx = [0, 1, 0, -1]
+dy = [1, 0, -1, 0]
 
-def dfs(cnt):
-    global ans, temp_a
-    if cnt == len(cctv):
-        temp_a = deepcopy(a)
-        c = 0
-        for i in range(len(cctv)):
-            x, y = cctv[i]
-            if a[x][y] == 1:
-                c += move(x, y, dir[i])
-            elif a[x][y] == 2:
-                c += move(x, y, dir[i])
-                c += move(x, y, (dir[i] + 2) % 4)
-            elif a[x][y] == 3:
-                c += move(x, y, dir[i])
-                c += move(x, y, (dir[i] + 1) % 4)
-            else:
-                c += move(x, y, dir[i])
-                c += move(x, y, (dir[i] + 1) % 4)
-                c += move(x, y, (dir[i] + 2) % 4)
-        ans = min(ans, area - c)
-        return
+def solution(cnt):
+    global check, ans
+    if cnt == cctv_n:
+        tmp = 0
+        for i in range(n):
+            for j in range(m):
+                if not B[i][j] and not check[i][j]:
+                    tmp += 1
+        return tmp
 
-    for i in range(4):
-        dir.append(i)
-        dfs(cnt + 1)
-        dir.pop()
+    x, y = cctv[cnt][0], cctv[cnt][1]
+    for k in range(4):
+        new_dir = []
+        if B[x][y] == 1:
+            new_dir.append(k)
+        elif B[x][y] == 2:
+            new_dir.append(k)
+            new_dir.append((k + 2) % 4)
+        elif B[x][y] == 3:
+            new_dir.append(k)
+            new_dir.append((k - 1) % 4)
+        elif B[x][y] == 4:
+            new_dir.append(k)
+            new_dir.append((k - 1) % 4)
+            new_dir.append((k + 2) % 4)
+        elif B[x][y] == 5:
+            new_dir.append(k)
+            new_dir.append((k - 1) % 4)
+            new_dir.append((k + 1) % 4)
+            new_dir.append((k + 2) % 4)
+        q = deque()
+        for d in new_dir:
+            nx, ny = x + dx[d], y + dy[d]
+            while 0 <= nx < n and 0 <= ny < m:
+                if not check[nx][ny] and B[nx][ny] != 6:
+                    check[nx][ny] = True
+                    q.append((nx, ny))
+                elif B[nx][ny] == 6: break
+                nx += dx[d]
+                ny += dy[d]
+        ans = min(ans, solution(cnt + 1))
+        while q:
+            qx, qy = q.popleft()
+            if not B[qx][qy]:
+                check[qx][qy] = False
+        if B[x][y] == 5:
+            break
+    return ans
 
-
-def move(x, y, d):
-    cnt = 0
-    while True:
-        nx = x + dx[d]
-        ny = y + dy[d]
-        if not 0 <= nx < n or not 0 <= ny < m or temp_a[nx][ny] == 6:
-            return cnt
-        if 0 < temp_a[nx][ny] < 6 or temp_a[nx][ny] == -1:
-            x, y = nx, ny
-            continue
-        temp_a[nx][ny] = -1
-        cnt += 1
-        x, y = nx, ny
-
-
-n, m = map(int, input().split())
-area = n * m
-a, cctv, cctv5 = [], [], []
-for i in range(n):
-    row = list(map(int, input().split()))
-    a.append(row)
-    for j in range(m):
-        if 0 < a[i][j] < 5:
-            cctv.append([i, j])
-            area -= 1
-        elif a[i][j] == 5:
-            cctv5.append([i, j])
-            area -= 1
-        elif a[i][j] == 6:
-            area -= 1
-
-for i in range(len(cctv5)):
-    x, y = cctv5[i]
-    for i in range(4):
-        nx, ny = x, y
-        while True:
-            nx += dx[i]
-            ny += dy[i]
-            if not 0 <= nx < n or not 0 <= ny < m or a[nx][ny] == 6:
-                break
-            if 0 < a[nx][ny] < 6 or a[nx][ny] == -1:
-                continue
-            a[nx][ny] = -1
-            area -= 1
-
-dir = deque()
-ans = area
-dfs(0)
-print(ans)
+if __name__ == '__main__':
+    n, m = map(int, sys.stdin.readline().split())
+    B = [list(map(int, sys.stdin.readline().split())) for _ in range(n)]
+    cctv = []
+    cctv_n = 0
+    ans = 0
+    check = [[False] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            if B[i][j] and B[i][j] != 6:
+                cctv.append((i, j))
+                check[i][j] = True
+                cctv_n += 1
+            if not B[i][j]:
+                ans += 1
+    solution(0)
+    print(ans)
