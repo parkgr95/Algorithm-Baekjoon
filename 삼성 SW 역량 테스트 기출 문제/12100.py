@@ -8,8 +8,7 @@ def move(dir):
             idx = 0
             for i in range(1, n): # 위에서부터
                 if B[i][j]:
-                    temp = B[i][j]
-                    B[i][j] = 0
+                    temp, B[i][j] = B[i][j], 0
                     if B[idx][j] == 0: # 옮길 칸이 빈 경우
                         B[idx][j] = temp
                     elif B[idx][j] == temp: # 옮길 칸 값이랑 같을 경우
@@ -24,8 +23,7 @@ def move(dir):
             idx = n - 1
             for i in range(n - 2, -1, -1): # 아래에서부터
                 if B[i][j]:
-                    temp = B[i][j]
-                    B[i][j] = 0
+                    temp, B[i][j] = B[i][j], 0
                     if B[idx][j] == 0:
                         B[idx][j] = temp
                     elif B[idx][j] == temp:
@@ -40,8 +38,7 @@ def move(dir):
             idx = 0
             for j in range(1, n):
                 if B[i][j]:
-                    temp = B[i][j]
-                    B[i][j] = 0
+                    temp, B[i][j] = B[i][j], 0
                     if B[i][idx] == 0:
                         B[i][idx] = temp
                     elif B[i][idx] == temp:
@@ -56,8 +53,7 @@ def move(dir):
             idx = n - 1
             for j in range(n - 2, -1, -1):
                 if B[i][j]:
-                    temp = B[i][j]
-                    B[i][j] = 0
+                    temp, B[i][j] = B[i][j], 0
                     if B[i][idx] == 0:
                         B[i][idx] = temp
                     elif B[i][idx] == temp:
