@@ -1,68 +1,51 @@
 s = input()
+stack = []
 
-
-def is_check(s):  # 올바른 괄호열인지 확인하는 함수
-    stack = []
-    flag = True
-
-    for i in range(len(s)):
-        if s[i] == '(' or s[i] == '[':
-            stack.append(s[i])
-
-        else:  # ) ]
-            if s[i] == ')':
-                if stack and stack[-1] == '(':
-                    stack.pop()
+for c in s:
+    if c == ')':
+        temp = 0
+        while stack:
+            top = stack.pop()
+            if top == '(':
+                if temp == 0:
+                    stack.append(2)
                 else:
-                    flag = False
-
-            else:  # ]
-                if stack and stack[-1] == '[':
-                    stack.pop()
+                    stack.append(2 * temp)
+                break
+            elif top == '[':
+                print("0")
+                exit(0)
+            else:
+                if temp == 0:
+                    temp = int(top)
                 else:
-                    flag = False
+                    temp += int(top)
+    elif c == "]":
+        temp = 0
+        while stack:
+            top = stack.pop()
+            if top == "[":
+                if temp == 0:
+                    stack.append(3)
+                else:
+                    stack.append(3 * temp)
+                break
+            elif top == "(":
+                print("0")
+                exit(0)
+            else:
+                if temp == 0:
+                    temp = int(top)
+                else:
+                    temp += int(top)
+    else:
+        stack.append(c)
 
-    if not stack and flag:
-        return True
-    return False
+for c in stack:
+    if c == "(" or c == "[":
+        print("0")
+        exit(0)
+    else:
+        continue
 
-
-def calc_value(s):  # 괄호의 값을 계산하는 함수
-    stack = []
-    for i in range(len(s)):
-        if s[i] == '(' or s[i] == '[':
-            stack.append(s[i])
-
-        else:  # ) ]
-            if s[i] == ')':
-                if stack[-1] == '(':
-                    stack[-1] = 2
-                else:  # 올바른 괄호열이기 때문에 숫자만 있다.
-                    temp = 0
-                    for idx in range(len(stack) - 1, -1, -1):  # 괄호 만날 때까지 계속 더해주기 (XY) = X + Y
-                        if stack[idx] == '(':
-                            stack[-1] = temp * 2
-                            break
-                        else:  # ==> type(stack[idx]) == int
-                            temp += stack[-1]
-                            stack.pop()
-
-            else:  # ]
-                if stack[-1] == '[':
-                    stack[-1] = 3
-                else:  # 올바른 괄호열이기 때문에 숫자만 있다.
-                    temp = 0
-                    for idx in range(len(stack) - 1, -1, -1):  # 괄호 만날 때까지 계속 더해주기 (XY) = X + Y
-                        if stack[idx] == '[':
-                            stack[-1] = temp * 3
-                            break
-                        else:  # ==> type(stack[idx]) == int
-                            temp += stack[-1]
-                            stack.pop()
-    return sum(stack)
-
-
-if is_check(s):
-    print(calc_value(s))
-else:
-    print(0)
+print(sum(stack))
