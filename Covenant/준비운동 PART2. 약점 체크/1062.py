@@ -52,9 +52,9 @@ def dfs(idx, cnt):
         return
     for i in range(idx, 26):
         if not learn[i]:
-            learn[i] = True
+            learn[i] = 1
             dfs(i, cnt + 1)
-            learn[i] = False
+            learn[i] = 0
 
 if __name__ == "__main__":
     n, k = map(int, input().split())
