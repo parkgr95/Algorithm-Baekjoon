@@ -1,4 +1,4 @@
-# 백트레킹
+# 백트래킹
 def solve(n):
     cnt = 0
     num = 1
