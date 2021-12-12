@@ -1,19 +1,4 @@
 import heapq
-import sys
-
-input = sys.stdin.readline
-INF = int(1e9)
-
-n = int(input())
-m = int(input())
-graph = [[] for _ in range(n + 1)]
-distance = [INF] * (n + 1)
-
-for i in range(m):
-    a, b, c = map(int, input().split())
-    graph[a].append((b, c))
-
-start, end = map(int, input().split())
 
 def dijkstra(start):
     q = []
@@ -23,14 +8,24 @@ def dijkstra(start):
         dist, now = heapq.heappop(q)
         if distance[now] < dist:
             continue
-        for i in graph[now]:
-            cost = dist + i[1]
-            if cost < distance[i[0]]:
-                distance[i[0]] = cost
-                heapq.heappush(q, (cost, i[0]))
+        for next, next_dist in graph[now]:
+            cost = dist + next_dist
+            if cost < distance[next]:
+                distance[next] = cost
+                heapq.heappush(q, (cost, next))
 
-dijkstra(start)
+if __name__ == "__main__":
+    n = int(input())
+    m = int(input())
+    graph = [[] for _ in range(n + 1)]
+    distance = [int(1e9)] * (n + 1)
+    for _ in range(m):
+        a, b, cost = map(int, input().split())
+        graph[a].append((b, cost))
+    start, end = map(int, input().split())
 
-print(distance[end])
+    dijkstra(start)
+
+    print(distance[end])
 
 # 회고: 다익스트라 알고리즘
