@@ -1,15 +1,17 @@
 n, m = map(int, input().split())
 B = [list(map(int, input().split())) for _ in range(n)]
 
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
-ans = 2 * n * m
-
-for x in range(1, n - 1):
-    for y in range(1, m - 1):
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
-            if B[x][y] - B[nx][ny] > 0:
-                ans += B[x][y] - B[nx][ny]
+ans = n * m
+for i in range(n):
+    for j in range(m):
+        if i == 0:
+            ans += B[j][i]
+        if j == 0:
+            ans += B[i][j]
+        else:
+            if B[i][j - 1] < B[i][j]:
+                ans += B[i][j] - B[i][j - 1]
+            if B[j][i - 1] < B[j][i]:
+                ans += B[j][i] - B[j][i - 1]
 
 print(2 * ans)
