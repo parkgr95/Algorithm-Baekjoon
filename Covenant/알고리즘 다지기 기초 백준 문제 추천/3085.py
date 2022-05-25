@@ -1,3 +1,9 @@
+"""
+day : 0526
+num : 1789
+idea : 구현, 그리디
+ref :
+"""
 def check(B):
     cnt = 1
     for i in range(n):
